@@ -3,7 +3,7 @@ from typing import List, Dict, Any
 from fastapi.routing import APIRouter
 import pandas as pd
 from pydantic import validator
-from sqlalchemy import func, select, or_, desc
+from sqlalchemy import select
 
 from database.connection import db
 from database.models.dataset import dataset
