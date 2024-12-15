@@ -3,8 +3,8 @@ from sqlalchemy.sql import func
 
 from database.meta import metadata
 
-dataset = sa.Table(
-    "dataset",
+model_metrics = sa.Table(
+    "model_metrics",
     metadata,
     sa.Column(
         "id",
@@ -14,73 +14,99 @@ dataset = sa.Table(
         autoincrement=True,
     ),
     sa.Column(
-        "income",
+        "model_name",
+        sa.String(31),
+        primary_key=True,
+        nullable=False,
+    ),
+    sa.Column(
+        "accuracy",
+        sa.Float,
+        primary_key=True,
+        nullable=False,
+    ),
+    sa.Column(
+        "precision",
+        sa.Float,
+        primary_key=True,
+        nullable=False,
+    ),
+    sa.Column(
+        "recall",
+        sa.Float,
+        primary_key=True,
+        nullable=False,
+    ),
+    sa.Column(
+        "f1_score",
+        sa.Float,
+        primary_key=True,
+        nullable=False,
+    ),
+    sa.Column(
+        "roc_auc",
+        sa.Float,
+        primary_key=True,
+        nullable=True,
+    ),
+    sa.Column(
+        "precision_false",
+        sa.Float,
+        primary_key=True,
+        nullable=False,
+    ),
+    sa.Column(
+        "recall_false",
+        sa.Float,
+        primary_key=True,
+        nullable=False,
+    ),
+    sa.Column(
+        "f1_score_false",
+        sa.Float,
+        primary_key=True,
+        nullable=False,
+    ),
+    sa.Column(
+        "precision_true",
+        sa.Float,
+        primary_key=True,
+        nullable=False,
+    ),
+    sa.Column(
+        "recall_true",
+        sa.Float,
+        primary_key=True,
+        nullable=False,
+    ),
+    sa.Column(
+        "f1_score_true",
+        sa.Float,
+        primary_key=True,
+        nullable=False,
+    ),
+    sa.Column(
+        "conf_matrix_0_0",
         sa.Integer,
+        primary_key=True,
         nullable=False,
     ),
     sa.Column(
-        "travel_frequency",
+        "conf_matrix_0_1",
         sa.Integer,
+        primary_key=True,
         nullable=False,
     ),
     sa.Column(
-        "vacation_budget",
+        "conf_matrix_1_0",
         sa.Integer,
+        primary_key=True,
         nullable=False,
     ),
     sa.Column(
-        "proximity_to_mountains",
+        "conf_matrix_1_1",
         sa.Integer,
-        nullable=False,
-    ),
-    sa.Column(
-        "proximity_to_beaches",
-        sa.Integer,
-        nullable=False,
-    ),
-    sa.Column(
-        "gender",
-        sa.String(15),
-        nullable=False,
-    ),
-    sa.Column(
-        "education_level",
-        sa.String(15),
-        nullable=False,
-    ),
-    sa.Column(
-        "preferred_activities",
-        sa.String(15),
-        nullable=False,
-    ),
-    sa.Column(
-        "location",
-        sa.String(15),
-        nullable=False,
-    ),
-    sa.Column(
-        "favorite_season",
-        sa.String(15),
-        nullable=False,
-    ),
-    sa.Column(
-        "age_range",
-        sa.String(15),
-        nullable=False,
-    ),
-    sa.Column(
-        "pets",
-        sa.Boolean,
-        nullable=False,
-    ),
-    sa.Column(
-        "environmental_concerns",
-        sa.Boolean,
-        nullable=False,
-    ),
-    sa.Column(
-        "preference",
-        sa.Boolean,
+        primary_key=True,
         nullable=False,
     ),
     sa.Column(

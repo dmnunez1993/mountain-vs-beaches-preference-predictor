@@ -12,6 +12,7 @@ predictions = sa.Table(
         sa.Integer,
         primary_key=True,
         nullable=False,
+        autoincrement=True,
     ),
     sa.Column(
         "income",
