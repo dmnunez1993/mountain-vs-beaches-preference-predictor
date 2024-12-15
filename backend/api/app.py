@@ -7,6 +7,8 @@ from api.common.validation import (
     validation_exception_handler,
     pydantic_exception_handler,
 )
+from api.router import router as prediction_router
+from prediction_model.model import prediction_model
 
 from config.allowed_origins import ALLOWED_ORIGINS
 from database.connection import db
@@ -24,6 +26,7 @@ app.add_middleware(
 
 @app.on_event("startup")
 async def startup():
+    await prediction_model.load_model_async()
     await db.connect()
 
 
@@ -31,6 +34,8 @@ async def startup():
 async def shutdown():
     await db.disconnect()
 
+
+app.include_router(prediction_router)
 
 app.add_exception_handler(ValidationError, pydantic_exception_handler)
 app.add_exception_handler(RequestValidationError, validation_exception_handler)

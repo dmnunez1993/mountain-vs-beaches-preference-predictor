@@ -51,7 +51,3 @@ class BaseModel(AsyncValidationModelMixin, CoreBaseModel):
             raise ValidationError.from_exception_data(cls.__name__, line_errors)
 
         return instance
-
-    class Config:
-        alias_generator = to_camel
-        populate_by_name = True
