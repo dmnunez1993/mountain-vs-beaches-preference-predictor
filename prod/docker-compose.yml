@@ -1,0 +1,59 @@
+version: "3.1"
+services:
+  backend:
+    image: "mountain_vs_beaches_preference_predictor_backend:latest"
+    restart: always
+    tty: true
+    stdin_open: true
+    env_file: .env
+    depends_on:
+      - db
+    command: python3 api.py
+  model_evaluation_scheduler:
+    image: "mountain_vs_beaches_preference_predictor_backend:latest"
+    restart: always
+    tty: true
+    stdin_open: true
+    env_file: .env
+    depends_on:
+      - db
+    command: python3 model_evaluation_scheduler.py
+  end_user_app:
+    image: "mountain_vs_beaches_preference_predictor_end_user_app:latest"
+    restart: always
+    tty: true
+    stdin_open: true
+    env_file: .env
+    environment:
+      API_ENDPOINT: $END_USER_APP_API_ENDPOINT
+    depends_on:
+      - backend
+  nginx:
+    image: "mountain_vs_beaches_preference_predictor_nginx:latest"
+    env_file: .env
+    ports:
+      - "$COMPOSE_NGINX_EXTERNAL_PORT:80"
+    depends_on:
+      - backend
+      - end_user_app
+    restart: always
+    tty: true
+    stdin_open: true
+    volumes:
+      - logs:/logs
+  db:
+    image: "postgres:14"
+    ports:
+      - "$COMPOSE_DATABASE_EXTERNAL_PORT:5432"
+    restart: always
+    env_file: .env
+    environment:
+      POSTGRES_USER: $COMPOSE_DATABASE_USER
+      POSTGRES_PASSWORD: $COMPOSE_DATABASE_PASSWORD
+      POSTGRES_DB: $COMPOSE_DATABASE_NAME
+    volumes:
+      - database:/var/lib/postgresql/data
+
+volumes:
+  logs: {}
+  database: {}

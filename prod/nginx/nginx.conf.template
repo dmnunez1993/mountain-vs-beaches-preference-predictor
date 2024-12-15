@@ -1,0 +1,42 @@
+server {
+    listen   80;
+    server_name ${NGINX_BACKEND_HOST};
+    client_max_body_size 4G;
+    access_log /logs/backend_nginx-access.log;
+    error_log /logs/backend_nginx-error.log warn;
+    proxy_read_timeout 300;
+    proxy_connect_timeout 300;
+    proxy_send_timeout 300;
+    location / {
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $http_host;
+        proxy_redirect off;
+
+        if (!-f $request_filename) {
+            proxy_pass ${NGINX_BACKEND_PROXY};
+            break;
+        }
+    }
+}
+
+server {
+    listen   80;
+    server_name ${NGINX_END_USER_APP_HOST};
+    client_max_body_size 4G;
+    access_log /logs/end_user_app_nginx-access.log;
+    error_log /logs/end_user_app_nginx-error.log warn;
+    proxy_read_timeout 300;
+    proxy_connect_timeout 300;
+    proxy_send_timeout 300;
+    location / {
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $http_host;
+        proxy_redirect off;
+
+        if (!-f $request_filename) {
+            proxy_pass ${NGINX_END_USER_PROXY};
+            break;
+        }
+    }
+}
+
