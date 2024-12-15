@@ -3,9 +3,11 @@ from typing import List, Dict, Any
 from fastapi.routing import APIRouter
 import pandas as pd
 from pydantic import validator
+from sqlalchemy import func, select, or_, desc
 
 from database.connection import db
 from database.models.dataset import dataset
+from database.models.model_metrics import model_metrics
 from database.models.predictions import predictions
 
 from api.models.base import BaseModel
@@ -207,3 +209,64 @@ async def predict_endpoint(prediction_requests: List[_PredictionRequest]):
         await db.execute(q2)
 
     return {"status": "success", "data": data}
+
+
+class _MetricsData(BaseModel):
+    model_name: str | None
+    accuracy: float | None
+    precision: float | None
+    recall: float | None
+    f1_score: float | None
+    roc_auc: float | None
+    precision_false: float | None
+    recall_false: float | None
+    f1_score_false: float | None
+    precision_true: float | None
+    recall_true: float | None
+    f1_score_true: float | None
+    conf_matrix_0_0: int | None
+    conf_matrix_0_1: int | None
+    conf_matrix_1_0: int | None
+    conf_matrix_1_1: int | None
+
+
+class _MetricsResponse(BaseModel):
+    status: str
+    data: _MetricsData
+
+
+@router.get(
+    "/metrics/",
+    response_model=_MetricsResponse | _ErrorResponse,
+)
+async def metrics_endpoint():
+    metrics = {
+        "model_name": None,
+        "accuracy": None,
+        "precision": None,
+        "recall": None,
+        "f1_score": None,
+        "roc_auc": None,
+        "precision_false": None,
+        "recall_false": None,
+        "f1_score_false": None,
+        "precision_true": None,
+        "recall_true": None,
+        "f1_score_true": None,
+        "conf_matrix_0_0": None,
+        "conf_matrix_0_1": None,
+        "conf_matrix_1_0": None,
+        "conf_matrix_1_1": None,
+    }
+
+    q = select(model_metrics).order_by(model_metrics.c.id.desc()).limit(1)
+
+    rows = await db.fetch_all(q)
+    rows = [dict(row) for row in rows]
+    if len(rows) > 0:
+        metrics = rows[0]
+        metrics.pop("id")
+        metrics.pop("created_at")
+        metrics.pop("updated_at")
+
+    return {"status": "success", "data": metrics}
