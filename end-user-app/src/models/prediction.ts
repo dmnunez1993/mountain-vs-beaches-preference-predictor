@@ -1,17 +1,17 @@
 export interface PredictionRequest {
-  income: number;
-  travel_frequency: number;
-  vacation_budget: number;
-  proximity_to_mountains: number;
-  proximity_to_eaches: number;
-  gender: string;
-  education_level: string;
-  preferred_activities: string;
-  location: string;
-  favorite_season: string;
-  age_range: string;
-  pets: boolean;
-  environmental_concerns: boolean;
+  income: number | null;
+  travel_frequency: number | null;
+  vacation_budget: number | null;
+  proximity_to_mountains: number | null;
+  proximity_to_beaches: number | null;
+  gender: string | null;
+  education_level: string | null;
+  preferred_activities: string | null;
+  location: string | null;
+  favorite_season: string | null;
+  age_range: string | null;
+  pets: boolean | null;
+  environmental_concerns: boolean | null;
   preference: boolean | null;
 }
 
