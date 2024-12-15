@@ -1,0 +1,10 @@
+[MASTER]
+disable=
+    missing-module-docstring,
+    missing-class-docstring,
+    missing-function-docstring,
+    broad-exception-caught,
+    wrong-import-position,
+
+[DESIGN]
+max-parents=15

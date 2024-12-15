@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+homedir=$( getent passwd "$USER" | cut -d: -f6 )
+
+if [[ ! -f $homedir/vscode_settings_set ]]; then
+    echo "Setting vscode settings..."
+    mkdir -p /mountain_vs_beaches_preference_predictor/.vscode
+    cp /mountain_vs_beaches_preference_predictor/vscode_settings_template.json /mountain_vs_beaches_preference_predictor/.vscode/settings.json
+    touch $homedir/vscode_settings_set
+fi

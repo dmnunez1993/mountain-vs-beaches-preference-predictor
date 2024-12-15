@@ -1,0 +1,203 @@
+#!/usr/bin/env python3
+import getpass
+import subprocess
+import os
+import platform
+import shutil
+import sys
+
+from dotenv import load_dotenv
+
+if os.path.isfile(".env"):
+    load_dotenv(".env")
+
+IMAGE_NAME = 'mountain_beaches_predictor_dev_env'
+CONTAINER_NAME = 'mountain_beaches_predictor_dev_env'
+POSTGRESQL_VOLUME_NAME = 'mountain_beaches_predictor_dev_postgresql_volume'
+DATA_FOLDER_PATH = '.mountain_beaches_predictor_dev_env'
+REPOSITORY_FOLDER_NAME = 'mountain_vs_beaches_preference_predictor'
+
+VOLUMES = [POSTGRESQL_VOLUME_NAME,]
+
+
+def run_command(command, hide_std=False):
+    if hide_std:
+        with open(os.devnull, 'w', encoding='utf-8') as dev_null:
+            return subprocess.call(
+                command, shell=True, stdout=dev_null, stderr=dev_null
+            )
+    return subprocess.call(command, shell=True)
+
+
+def get_repo_root():
+    return subprocess.check_output(
+        'git rev-parse --show-toplevel'.split(), encoding='utf-8'
+    ).strip()
+
+
+def check_volume_exists(volume_name):
+    command = f"docker volume inspect {volume_name}"
+    ret = run_command(command, True) == 0
+    return ret
+
+
+def check_image_exists(image_name):
+    command = f"docker image inspect {image_name}"
+    ret = run_command(command, True) == 0
+    return ret
+
+
+def run_dev_environment():
+    user = getpass.getuser()
+    uid = os.getuid()
+    repo_root = get_repo_root()
+    docker_args = []
+    database_port = os.environ.get("DATABASE_PORT", "25430")
+    backend_port = os.environ.get("BACKEND_PORT", "8000")
+    end_user_port = os.environ.get("END_USER_PORT", "3000")
+
+    minio_external_port = os.environ.get("MINIO_EXTERNAL_PORT", "9000")
+    minio_console_external_port = os.environ.get(
+        "MINIO_CONSOLE_EXTERNAL_PORT", "9001"
+    )
+    minio_internal_port = os.environ.get("MINIO_INTERNAL_PORT", "9000")
+    minio_console_internal_port = os.environ.get(
+        "MINIO_CONSOLE_INTERNAL_PORT", "9001"
+    )
+
+    for volume_name in VOLUMES:
+        if not check_volume_exists(volume_name):
+            print(f"Creating {volume_name} volume...".format(volume_name))
+            run_command(f"docker volume create {volume_name}", True)
+
+    home_folder = os.path.expanduser("~")
+    docker_args.append("-it")
+    docker_args.append("--rm")
+    docker_args.append(f"--name=\"{CONTAINER_NAME}\"")
+    docker_args.append(f"-p {end_user_port}:{end_user_port}")
+    docker_args.append(f"-p {backend_port}:{backend_port}")
+    docker_args.append(f"-p {database_port}:5432")
+    docker_args.append(
+        f"-p {minio_external_port}:{minio_internal_port}"
+    )
+    docker_args.append(
+        f"-p {minio_console_external_port}:{minio_console_internal_port}"
+    )
+    docker_args.append(f"--user {uid}:{uid}")
+    docker_args.append(f"-e USER={user}")
+    docker_args.append(
+        f"--volume {home_folder}/{DATA_FOLDER_PATH}/user/:/home/{user}/"
+    )
+    docker_args.append(
+        f"--volume {home_folder}/.ssh/:/home/{user}/.ssh/"
+    )
+    docker_args.append(
+        f"--volume {home_folder}/.gitconfig:/home/{user}/.gitconfig"
+    )
+    docker_args.append(
+       f"--volume {repo_root}:/{REPOSITORY_FOLDER_NAME}/"
+    )
+    docker_args.append(
+        f"--volume {POSTGRESQL_VOLUME_NAME}:/var/lib/postgresql/"
+    )
+    docker_args.append(f"--name {CONTAINER_NAME}")
+    docker_args.append(f"--hostname {CONTAINER_NAME}")
+    docker_args.append(f"--workdir /{REPOSITORY_FOLDER_NAME}/")
+
+    docker_args = ' '.join(docker_args)
+    docker_command = f"docker run {docker_args} {IMAGE_NAME} setup_env"
+
+    run_command(
+        f"mkdir -p {home_folder}/{DATA_FOLDER_PATH}/user/"
+    )
+
+    if not os.path.isfile(f"{home_folder}/.gitconfig"):
+        run_command(f"touch {home_folder}/.gitconfig")
+
+    run_command(docker_command)
+
+
+def attach_dev_environment():
+    uid = os.getuid()
+    command = f"docker exec -it --user {uid}:{uid} {CONTAINER_NAME} attach_env"
+    run_command(command)
+
+
+def is_running():
+    command = f"docker ps | grep {CONTAINER_NAME} > /dev/null"
+    try:
+        subprocess.check_call(command, shell=True)
+    except Exception:
+        return False
+
+    return True
+
+
+def run():
+    if not is_running():
+        run_dev_environment()
+    else:
+        attach_dev_environment()
+
+
+def build():
+    print("Building dev environment")
+    user = getpass.getuser()
+    uid = os.getuid()
+
+    environment_folder_path = os.path.dirname(os.path.realpath(__file__))
+    dockerfile_path = os.path.join(environment_folder_path, 'Dockerfile')
+
+    if platform.processor() == 'arm':
+        dockerfile_path = os.path.join(
+            environment_folder_path,
+            'Dockerfile.arm64',
+        )
+
+    command = ("docker build "
+               f"--build-arg USER_UID={uid} "
+               f"--build-arg USER_NAME={user} "
+               f"-t {IMAGE_NAME} -f {dockerfile_path} {environment_folder_path}")
+
+    run_command(command.format(uid, user))
+
+
+def clear():
+    print("Clearing dev environment..")
+    home_folder = os.path.expanduser("~")
+    dev_env_folder = f"{home_folder}/{DATA_FOLDER_PATH}/"
+
+    if os.path.isdir(dev_env_folder):
+        shutil.rmtree(dev_env_folder)
+
+    if check_image_exists(IMAGE_NAME):
+        command = f"docker image rm {IMAGE_NAME}"
+        run_command(command)
+
+    for volume in VOLUMES:
+        if check_volume_exists(volume):
+            command = f"docker volume rm {volume}"
+            run_command(command)
+
+
+
+def main():
+    if len(sys.argv) <= 1:
+        run()
+        return
+
+    command = sys.argv[1]
+
+    if command == 'run':
+        run()
+    elif command == 'build':
+        build()
+    elif command == 'clear':
+        clear()
+    else:
+        print(f"Command {command} not supported!")
+        sys.exit(1)
+
+
+if __name__ == '__main__':
+    main()
