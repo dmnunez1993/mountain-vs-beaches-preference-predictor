@@ -42,7 +42,6 @@ def _get_field_errors(errors):
 
 async def validation_exception_handler(_: Request, exc: RequestValidationError):
     errors = exc.errors()
-    print(errors)
     field_errors = {}
     for error in errors:
         if error['type'] == 'value_error.jsondecode':

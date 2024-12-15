@@ -4,6 +4,10 @@ from fastapi.routing import APIRouter
 import pandas as pd
 from pydantic import validator
 
+from database.connection import db
+from database.models.dataset import dataset
+from database.models.predictions import predictions
+
 from api.models.base import BaseModel
 from prediction_model.model import (
     prediction_model,
@@ -160,5 +164,46 @@ async def predict_endpoint(prediction_requests: List[_PredictionRequest]):
                 "probabilities": proba_curr
             }
         )
+
+    x_rows = x.to_dict(orient="records")
+
+    new_dataset_rows = []
+    new_prediction_rows = []
+
+    for (
+        x_row_curr,
+        y_real_curr,
+        y_pred_curr,
+        y_pred_proba_curr,
+    ) in zip(
+        x_rows,
+        y,
+        y_pred,
+        y_pred_proba,
+    ):
+        if y_real_curr is not None:
+            new_dataset_row = {**x_row_curr, "preference": y_real_curr}
+            new_dataset_row_correct_names = {}
+
+            for key, value in new_dataset_row.items():
+                new_dataset_row_correct_names[key.lower()] = value
+            new_dataset_rows.append(new_dataset_row_correct_names)
+
+        new_prediction_row = {
+            **x_row_curr,
+            "preference": y_real_curr,
+            "preference_prediction": y_pred_curr,
+            "preference_prediction_probabilities": y_pred_proba_curr,
+        }
+        new_prediction_row_correct_names = {}
+        for key, value in new_prediction_row.items():
+            new_prediction_row_correct_names[key.lower()] = value
+        new_prediction_rows.append(new_prediction_row_correct_names)
+
+    async with db.transaction():
+        q1 = dataset.insert(new_dataset_rows)
+        await db.execute(q1)
+        q2 = predictions.insert(new_prediction_rows)
+        await db.execute(q2)
 
     return {"status": "success", "data": data}
