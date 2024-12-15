@@ -2,6 +2,7 @@ import { useState } from "react";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import PredictionTab from "./PredictionTab";
+import MetricsTab from "./MetricsTab";
 
 const MainApp = () => {
   const [tab, setTab] = useState<string>("prediction");
@@ -15,6 +16,9 @@ const MainApp = () => {
       >
         <Tab eventKey="prediction" title="Prediction">
           <PredictionTab />
+        </Tab>
+        <Tab eventKey="metrics" title="Metrics">
+          <MetricsTab />
         </Tab>
       </Tabs>
     </>
