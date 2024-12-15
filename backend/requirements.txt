@@ -32,7 +32,6 @@ isort==5.12.0
 Mako==1.2.4
 MarkupSafe==2.1.3
 mccabe==0.7.0
-miniopy-async==1.16
 multidict==6.0.4
 packaging==23.2
 pillow==10.2.0

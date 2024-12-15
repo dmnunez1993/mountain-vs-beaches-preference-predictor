@@ -17,7 +17,9 @@ POSTGRESQL_VOLUME_NAME = 'mountain_beaches_predictor_dev_postgresql_volume'
 DATA_FOLDER_PATH = '.mountain_beaches_predictor_dev_env'
 REPOSITORY_FOLDER_NAME = 'mountain_vs_beaches_preference_predictor'
 
-VOLUMES = [POSTGRESQL_VOLUME_NAME,]
+VOLUMES = [
+    POSTGRESQL_VOLUME_NAME,
+]
 
 
 def run_command(command, hide_std=False):
@@ -56,15 +58,6 @@ def run_dev_environment():
     backend_port = os.environ.get("BACKEND_PORT", "8000")
     end_user_port = os.environ.get("END_USER_PORT", "3000")
 
-    minio_external_port = os.environ.get("MINIO_EXTERNAL_PORT", "9000")
-    minio_console_external_port = os.environ.get(
-        "MINIO_CONSOLE_EXTERNAL_PORT", "9001"
-    )
-    minio_internal_port = os.environ.get("MINIO_INTERNAL_PORT", "9000")
-    minio_console_internal_port = os.environ.get(
-        "MINIO_CONSOLE_INTERNAL_PORT", "9001"
-    )
-
     for volume_name in VOLUMES:
         if not check_volume_exists(volume_name):
             print(f"Creating {volume_name} volume...".format(volume_name))
@@ -77,26 +70,16 @@ def run_dev_environment():
     docker_args.append(f"-p {end_user_port}:{end_user_port}")
     docker_args.append(f"-p {backend_port}:{backend_port}")
     docker_args.append(f"-p {database_port}:5432")
-    docker_args.append(
-        f"-p {minio_external_port}:{minio_internal_port}"
-    )
-    docker_args.append(
-        f"-p {minio_console_external_port}:{minio_console_internal_port}"
-    )
     docker_args.append(f"--user {uid}:{uid}")
     docker_args.append(f"-e USER={user}")
     docker_args.append(
         f"--volume {home_folder}/{DATA_FOLDER_PATH}/user/:/home/{user}/"
     )
-    docker_args.append(
-        f"--volume {home_folder}/.ssh/:/home/{user}/.ssh/"
-    )
+    docker_args.append(f"--volume {home_folder}/.ssh/:/home/{user}/.ssh/")
     docker_args.append(
         f"--volume {home_folder}/.gitconfig:/home/{user}/.gitconfig"
     )
-    docker_args.append(
-       f"--volume {repo_root}:/{REPOSITORY_FOLDER_NAME}/"
-    )
+    docker_args.append(f"--volume {repo_root}:/{REPOSITORY_FOLDER_NAME}/")
     docker_args.append(
         f"--volume {POSTGRESQL_VOLUME_NAME}:/var/lib/postgresql/"
     )
@@ -107,9 +90,7 @@ def run_dev_environment():
     docker_args = ' '.join(docker_args)
     docker_command = f"docker run {docker_args} {IMAGE_NAME} setup_env"
 
-    run_command(
-        f"mkdir -p {home_folder}/{DATA_FOLDER_PATH}/user/"
-    )
+    run_command(f"mkdir -p {home_folder}/{DATA_FOLDER_PATH}/user/")
 
     if not os.path.isfile(f"{home_folder}/.gitconfig"):
         run_command(f"touch {home_folder}/.gitconfig")
@@ -154,10 +135,12 @@ def build():
             'Dockerfile.arm64',
         )
 
-    command = ("docker build "
-               f"--build-arg USER_UID={uid} "
-               f"--build-arg USER_NAME={user} "
-               f"-t {IMAGE_NAME} -f {dockerfile_path} {environment_folder_path}")
+    command = (
+        "docker build "
+        f"--build-arg USER_UID={uid} "
+        f"--build-arg USER_NAME={user} "
+        f"-t {IMAGE_NAME} -f {dockerfile_path} {environment_folder_path}"
+    )
 
     run_command(command.format(uid, user))
 
@@ -178,7 +161,6 @@ def clear():
         if check_volume_exists(volume):
             command = f"docker volume rm {volume}"
             run_command(command)
-
 
 
 def main():

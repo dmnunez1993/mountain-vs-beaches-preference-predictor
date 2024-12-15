@@ -23,9 +23,6 @@ setup_vscode_settings
 # Start postgresql
 sudo su - postgres -c "/usr/lib/postgresql/14/bin/pg_ctl -D /var/lib/postgresql/14/main -l logfile start"
 
-# Start minio
-sudo -E minio server /minio_data --address :${MINIO_INTERNAL_PORT:-9000} --console-address :${MINIO_CONSOLE_INTERNAL_PORT:-9001} &>/dev/null &
-
 # Start redis
 sudo redis-server &>/dev/null &
 
