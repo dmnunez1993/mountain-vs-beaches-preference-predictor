@@ -34,7 +34,7 @@ server {
         proxy_redirect off;
 
         if (!-f $request_filename) {
-            proxy_pass ${NGINX_END_USER_PROXY};
+            proxy_pass ${NGINX_END_USER_APP_PROXY};
             break;
         }
     }
