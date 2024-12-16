@@ -80,31 +80,41 @@ const MetricsTab = () => {
                   <tr>
                     <td>Accuracy</td>
                     <td style={{ textAlign: "right" }}>
-                      {metrics !== null ? metrics.accuracy.toFixed(2) : "-"}
+                      {metrics !== null && metrics.accuracy !== null
+                        ? metrics.accuracy.toFixed(2)
+                        : "-"}
                     </td>
                   </tr>
                   <tr>
                     <td>Precision</td>
                     <td style={{ textAlign: "right" }}>
-                      {metrics !== null ? metrics.precision.toFixed(2) : "-"}
+                      {metrics !== null && metrics.precision !== null
+                        ? metrics.precision.toFixed(2)
+                        : "-"}
                     </td>
                   </tr>
                   <tr>
                     <td>Recall</td>
                     <td style={{ textAlign: "right" }}>
-                      {metrics !== null ? metrics.recall.toFixed(2) : "-"}
+                      {metrics !== null && metrics.recall !== null
+                        ? metrics.recall.toFixed(2)
+                        : "-"}
                     </td>
                   </tr>
                   <tr>
                     <td>F1 Score</td>
                     <td style={{ textAlign: "right" }}>
-                      {metrics !== null ? metrics.f1_score.toFixed(2) : "-"}
+                      {metrics !== null && metrics.f1_score !== null
+                        ? metrics.f1_score.toFixed(2)
+                        : "-"}
                     </td>
                   </tr>
                   <tr>
                     <td>ROC AUC</td>
                     <td style={{ textAlign: "right" }}>
-                      {metrics !== null ? metrics.roc_auc.toFixed(2) : "-"}
+                      {metrics !== null && metrics.roc_auc !== null
+                        ? metrics.roc_auc.toFixed(2)
+                        : "-"}
                     </td>
                   </tr>
                 </tbody>
@@ -135,15 +145,17 @@ const MetricsTab = () => {
                   <tr>
                     <td>Beaches</td>
                     <td style={{ textAlign: "right" }}>
-                      {metrics !== null
+                      {metrics !== null && metrics.precision_false !== null
                         ? metrics.precision_false.toFixed(2)
                         : "-"}
                     </td>
                     <td style={{ textAlign: "right" }}>
-                      {metrics !== null ? metrics.recall_false.toFixed(2) : "-"}
+                      {metrics !== null && metrics.recall_false !== null
+                        ? metrics.recall_false.toFixed(2)
+                        : "-"}
                     </td>
                     <td style={{ textAlign: "right" }}>
-                      {metrics !== null
+                      {metrics !== null && metrics.f1_score_false !== null
                         ? metrics.f1_score_false.toFixed(2)
                         : "-"}
                     </td>
@@ -151,15 +163,17 @@ const MetricsTab = () => {
                   <tr>
                     <td>Mountains</td>
                     <td style={{ textAlign: "right" }}>
-                      {metrics !== null
+                      {metrics !== null && metrics.precision_true !== null
                         ? metrics.precision_true.toFixed(2)
                         : "-"}
                     </td>
                     <td style={{ textAlign: "right" }}>
-                      {metrics !== null ? metrics.recall_true.toFixed(2) : "-"}
+                      {metrics !== null && metrics.recall_true !== null
+                        ? metrics.recall_true.toFixed(2)
+                        : "-"}
                     </td>
                     <td style={{ textAlign: "right" }}>
-                      {metrics !== null
+                      {metrics !== null && metrics.f1_score_true !== null
                         ? metrics.f1_score_true.toFixed(2)
                         : "-"}
                     </td>
@@ -188,13 +202,29 @@ const MetricsTab = () => {
                 <tbody>
                   <tr>
                     <td>Beaches</td>
-                    <td>{metrics !== null ? metrics.conf_matrix_0_0 : "-"}</td>
-                    <td>{metrics !== null ? metrics.conf_matrix_0_1 : "-"}</td>
+                    <td>
+                      {metrics !== null && metrics.conf_matrix_0_0 !== null
+                        ? metrics.conf_matrix_0_0
+                        : "-"}
+                    </td>
+                    <td>
+                      {metrics !== null && metrics.conf_matrix_0_1 !== null
+                        ? metrics.conf_matrix_0_1
+                        : "-"}
+                    </td>
                   </tr>
                   <tr>
                     <td>Mountains</td>
-                    <td>{metrics !== null ? metrics.conf_matrix_1_0 : "-"}</td>
-                    <td>{metrics !== null ? metrics.conf_matrix_1_1 : "-"}</td>
+                    <td>
+                      {metrics !== null && metrics.conf_matrix_1_0 !== null
+                        ? metrics.conf_matrix_1_0
+                        : "-"}
+                    </td>
+                    <td>
+                      {metrics !== null && metrics.conf_matrix_1_1 !== null
+                        ? metrics.conf_matrix_1_1
+                        : "-"}
+                    </td>
                   </tr>
                 </tbody>
               </Table>
