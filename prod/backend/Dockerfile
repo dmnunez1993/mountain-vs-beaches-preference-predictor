@@ -1,6 +1,6 @@
 FROM python:3.10-alpine
 
-RUN apk add postgresql-libs gcc musl-dev postgresql-dev
+RUN apk add postgresql-libs gcc g++ musl-dev postgresql-dev
 
 RUN mkdir /backend
 

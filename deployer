@@ -158,7 +158,7 @@ def main():
         build_args = " ".join(build_args)
 
         run_command(
-            f'cd {repo_root} && docker build -f {backend_dockerfile_path} -t BACKEND_IMAGE_NAMElatest .'
+            f'cd {repo_root} && docker build -f {backend_dockerfile_path} -t {BACKEND_IMAGE_NAME}:latest .'
         )
         run_command(
             f'cd {repo_root} && docker build -f {end_user_app_dockerfile_path} -t {END_USER_APP_IMAGE_NAME}:latest .'
