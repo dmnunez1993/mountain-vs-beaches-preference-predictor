@@ -123,7 +123,7 @@ def restore_data(backup_file):
 
 def clear():
     stop()
-    run_command(f'docker-compose -p {get_compose_name()} rm -f')
+    run_command(f'docker compose -p {get_compose_name()} rm -f')
     for image_name in IMAGE_NAMES:
         run_command(f'docker image rm {image_name}:latest')
 
@@ -133,7 +133,7 @@ def clear():
 
 def stop():
     print("Stopping services...")
-    run_command(f'cd prod/ && docker-compose -p {get_compose_name()} stop')
+    run_command(f'cd prod/ && docker compose -p {get_compose_name()} stop')
 
 
 def main():
