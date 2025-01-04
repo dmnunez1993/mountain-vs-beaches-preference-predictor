@@ -4,7 +4,6 @@ MarkupSafe==2.1.3
 PyJWT==2.8.0
 Pygments==2.11.2
 SQLAlchemy==1.4.49
-XlsxWriter==3.1.9
 aiobcrypt==3.2.0.post1
 aiofile==3.8.8
 aiohttp==3.8.6
@@ -59,9 +58,7 @@ pylint==3.0.1
 pytest==7.4.2
 python-dotenv==1.0.0
 pytz==2023.3.post1
-reportlab==4.0.9
 scikit-learn==1.5.2
-seaborn==0.13.2
 sentry-sdk==2.7.1
 sniffio==1.3.0
 starlette==0.27.0
@@ -70,7 +67,6 @@ tomlkit==0.12.1
 typing_extensions==4.8.0
 urllib3==2.0.7
 uvicorn==0.23.2
-virtualenv==20.24.5
 yapf==0.40.2
 yarl==1.9.2
 zipp==3.17.0
