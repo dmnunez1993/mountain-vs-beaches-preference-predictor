@@ -20,9 +20,9 @@ To run the dev environment:
 
 ### Backend Development (w/ FastAPI)
 
-In order to start developing the backend, you need to run the following in the root of the repository:
+In order to start developing the inference, you need to run the following in the root of the repository:
 
-    cd backend
+    cd inference
     cp .env.example .env
     pip install -r requirements.txt
 
