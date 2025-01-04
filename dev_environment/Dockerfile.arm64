@@ -70,7 +70,7 @@ USER ${USER_NAME}
 ENV HOME=/home/${USER_NAME}
 
 # Set up pythonpath
-ENV PYTHONPATH=/mountain_vs_beaches_preference_predictor/backend
+ENV PYTHONPATH=/mountain_vs_beaches_preference_predictor/inference
 
 # Set up additional configuration
 ENV BACKEND_ACCESS_SECRET=access_secret

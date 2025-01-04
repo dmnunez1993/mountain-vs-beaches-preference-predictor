@@ -9,13 +9,13 @@ venv/
 **/run/
 logs/
 **/whoosh/
-backend/static/
+inference/static/
 **/dbf/
 *.pid
 *.vscode
 **/test/
 prod/.env
-backend/.env
+inference/.env
 
 # Macos
 .DS_Store

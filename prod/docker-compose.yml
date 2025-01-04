@@ -1,7 +1,7 @@
 version: "3.1"
 services:
-  backend:
-    image: "mountain_vs_beaches_preference_predictor_backend:latest"
+  inference:
+    image: "mountain_vs_beaches_preference_predictor_inference:latest"
     restart: always
     tty: true
     stdin_open: true
@@ -10,7 +10,7 @@ services:
       - db
     command: python3 api.py
   model_evaluation_scheduler:
-    image: "mountain_vs_beaches_preference_predictor_backend:latest"
+    image: "mountain_vs_beaches_preference_predictor_inference:latest"
     restart: always
     tty: true
     stdin_open: true
@@ -27,14 +27,14 @@ services:
     environment:
       API_ENDPOINT: $END_USER_APP_API_ENDPOINT
     depends_on:
-      - backend
+      - inference
   nginx:
     image: "mountain_vs_beaches_preference_predictor_nginx:latest"
     env_file: .env
     ports:
       - "$COMPOSE_NGINX_EXTERNAL_PORT:80"
     depends_on:
-      - backend
+      - inference
       - end_user_app
     restart: always
     tty: true

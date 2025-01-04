@@ -6,14 +6,14 @@ import sys
 
 from dotenv import load_dotenv
 
-BACKEND_IMAGE_NAME = 'mountain_vs_beaches_preference_predictor_backend'
+INFERENCE_IMAGE_NAME = 'mountain_vs_beaches_preference_predictor_inference'
 END_USER_APP_IMAGE_NAME = 'mountain_vs_beaches_preference_predictor_end_user_app'
 NGINX_IMAGE_NAME = 'mountain_vs_beaches_preference_predictor_nginx'
 DEFAULT_COMPOSE_NAME = 'mountain_vs_beaches_preference_predictor_prod'
 
 IMAGE_NAMES = [
     END_USER_APP_IMAGE_NAME,
-    BACKEND_IMAGE_NAME,
+    INFERENCE_IMAGE_NAME,
     NGINX_IMAGE_NAME,
 ]
 
@@ -141,7 +141,7 @@ def main():
 
     repo_root = get_repo_root()
     backend_dockerfile_path = os.path.join(
-        repo_root, 'prod', 'backend', 'Dockerfile'
+        repo_root, 'prod', 'inference', 'Dockerfile'
     )
     end_user_app_dockerfile_path = os.path.join(
         repo_root, 'prod', 'end-user-app', 'Dockerfile'
@@ -158,7 +158,7 @@ def main():
         build_args = " ".join(build_args)
 
         run_command(
-            f'cd {repo_root} && docker build -f {backend_dockerfile_path} -t {BACKEND_IMAGE_NAME}:latest .'
+            f'cd {repo_root} && docker build -f {backend_dockerfile_path} -t {INFERENCE_IMAGE_NAME}:latest .'
         )
         run_command(
             f'cd {repo_root} && docker build -f {end_user_app_dockerfile_path} -t {END_USER_APP_IMAGE_NAME}:latest .'
@@ -200,7 +200,7 @@ def main():
     if command == 'shell':
         print("Starting up shell...")
         run_command(
-            f'cd prod/ && docker compose -p {compose_name} run backend sh -c "cd /backend && sh"'
+            f'cd prod/ && docker compose -p {compose_name} run inference sh -c "cd /inference && sh"'
         )
 
     if command == 'shell_nginx':
