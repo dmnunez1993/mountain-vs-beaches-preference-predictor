@@ -2,7 +2,7 @@ from typing import List, Dict, Any
 
 from fastapi.routing import APIRouter
 import pandas as pd
-from pydantic import validator
+from pydantic import Field, validator
 from sqlalchemy import select
 
 from database.connection import db
@@ -21,14 +21,14 @@ router = APIRouter()
 class _PredictionRequest(BaseModel):
     age_range: str
     gender: str
-    income: int
+    income: int = Field(ge=0, le=1073741823)
     education_level: str
-    travel_frequency: int
+    travel_frequency: int = Field(ge=0, le=1073741823)
     preferred_activities: str
-    vacation_budget: int
+    vacation_budget: int = Field(ge=0, le=1073741823)
     location: str
-    proximity_to_mountains: int
-    proximity_to_beaches: int
+    proximity_to_mountains: int = Field(ge=0, le=1073741823)
+    proximity_to_beaches: int = Field(ge=0, le=1073741823)
     favorite_season: str
     pets: bool
     environmental_concerns: bool | None

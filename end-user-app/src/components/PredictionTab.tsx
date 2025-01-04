@@ -213,6 +213,7 @@ const PredictionTab = () => {
                 onChange={onIncomeChange}
                 aria-placeholder="Income"
                 type="number"
+                max="1073741823"
                 value={emptyValueOnNull(income)}
               ></Form.Control>
             </Col>
@@ -228,6 +229,7 @@ const PredictionTab = () => {
                 onChange={onTravelFrequencyChange}
                 aria-placeholder="Travel Frequency"
                 type="number"
+                max="1073741823"
                 value={emptyValueOnNull(travelFrecuency)}
               ></Form.Control>
             </Col>
@@ -244,6 +246,7 @@ const PredictionTab = () => {
                 aria-placeholder="Vacation Budget"
                 type="number"
                 min="0"
+                max="1073741823"
                 value={emptyValueOnNull(vacationBudget)}
               ></Form.Control>
             </Col>
@@ -260,6 +263,7 @@ const PredictionTab = () => {
                 aria-placeholder="Proximity to Mountains"
                 type="number"
                 min="0"
+                max="1073741823"
                 value={emptyValueOnNull(proximityToMountains)}
               ></Form.Control>
             </Col>
@@ -276,6 +280,7 @@ const PredictionTab = () => {
                 aria-placeholder="Proximity to Beaches"
                 type="number"
                 min="0"
+                max="1073741823"
                 value={emptyValueOnNull(proximityToBeaches)}
               ></Form.Control>
             </Col>
