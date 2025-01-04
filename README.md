@@ -1,6 +1,8 @@
 # Mountain vs Beaches Predictor Application
 
-An application that implements a Mountain vs Beaches predictor project as a web application.
+A small web application that predicts user preferences between mountains and beaches. This project aims to demonstrate the end-to-end process of training and deploying a Machine Learning model to a production environment.
+
+The dataset used to train the prediction model can be found in [Kaggle](https://www.kaggle.com/datasets/jahnavipaliwal/mountains-vs-beaches-preference).
 
 ### Dependencies
 
@@ -87,3 +89,7 @@ To stop the production environment:
 To clear the production environment entirely:
 
     ./deployer clear
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
