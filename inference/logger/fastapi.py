@@ -55,7 +55,7 @@ FASTAPI_LOG_CONFIG = {
                     "level": "ERROR",
                     "propagate": False
                 },
-            "tinysched":
+            "mountain_vs_beaches_preference_inference":
                 {
                     "handlers": ["default"],
                     "level": "DEBUG",

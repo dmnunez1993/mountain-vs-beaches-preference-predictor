@@ -1,6 +1,6 @@
 import logging
 
-logger = logging.getLogger('tinysched')
+logger = logging.getLogger('mountain_vs_beaches_preference_inference')
 logger.setLevel(logging.DEBUG)
 logger_handler = logging.StreamHandler()
 logger_handler.setFormatter(
