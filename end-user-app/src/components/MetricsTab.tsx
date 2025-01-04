@@ -6,6 +6,7 @@ import Table from "react-bootstrap/Table";
 import { ModelMetrics } from "../models/metrics";
 import { getAbsoluteUrl } from "../api/urls";
 import { errorAlert } from "./utils/messages";
+import Loading from "./indicators/Loading";
 
 const MetricsTab = () => {
   const [metrics, setMetrics] = useState<ModelMetrics | null>(null);
@@ -43,6 +44,10 @@ const MetricsTab = () => {
   useEffect(() => {
     updateMetrics();
   }, []);
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <>
