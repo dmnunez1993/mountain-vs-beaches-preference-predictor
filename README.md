@@ -20,9 +20,13 @@ To run the dev environment:
 
 ### Training the prediction model
 
-To train the model, run the following commands in the root of the repository:
+Before training the model, it is necessary to install the dependencies:
 
     cd train
+    pip install -r requirements.txt
+
+Then, to train the model, run the following command:
+
     ./train_model.py -i ../data/raw/mountains_vs_beaches_preferences.csv -o ../inference/prediction_model/lr.pkl
 
 Note that both the input path (-i) and the output path (-o) can be modified if necessary.
